@@ -1,9 +1,9 @@
 resource "tfe_project" "test" {
   name         = "tftest-project"
-  organization = "hashi-demos-apj"
+  organization = var.organization
 }
 
 resource "tfe_team" "test" {
   name         = "tftest-team"
-  organization = "hashi-demos-apj"
+  organization = var.organization
 }

@@ -27,9 +27,13 @@ provider "tfe" {
 }
 
 run "setup" {
+  variables {
+    organization = "hashi-demos-apj"
+  }
   module {
     source = "./tests/setup"
   }
+
 }
 
 run "execute" {
@@ -48,18 +52,18 @@ run "verify" {
     project_id = run.setup.tfe_project_id
     team_id    = run.setup.tfe_team_id
   }
-  
+
   assert {
     condition     = tfe_team_project_access.custom.access == "custom"
     error_message = "access type did not match expected - custom"
   }
 
-   assert {
+  assert {
     condition     = tfe_team_project_access.custom.project_access[0].settings == "read"
     error_message = "access type did not match expected - read"
   }
 
-   assert {
+  assert {
     condition     = tfe_team_project_access.custom.project_access[0].teams == "none"
     error_message = "access type did not match expected - read"
   }
