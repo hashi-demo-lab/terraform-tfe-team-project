@@ -1,5 +1,3 @@
-# file_count.tftest.hcl
-
 variables {
   project_id = ""
   team_id    = ""
@@ -39,8 +37,30 @@ run "execute" {
     project_id = run.setup.tfe_project_id
     team_id    = run.setup.tfe_team_id
   }
+
+  command = apply
+
 }
 
-/* run "verify" {
+run "verify" {
   # Load and count the objects created in the "execute" run block.
-} */
+  variables {
+    project_id = run.setup.tfe_project_id
+    team_id    = run.setup.tfe_team_id
+  }
+  
+  assert {
+    condition     = tfe_team_project_access.custom.access == "custom"
+    error_message = "access type did not match expected - custom"
+  }
+
+   assert {
+    condition     = tfe_team_project_access.custom.project_access[0].settings == "read"
+    error_message = "access type did not match expected - read"
+  }
+
+   assert {
+    condition     = tfe_team_project_access.custom.project_access[0].teams == "none"
+    error_message = "access type did not match expected - read"
+  }
+}
